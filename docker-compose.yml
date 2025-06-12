@@ -1,0 +1,25 @@
+services:
+    gluetun:
+        image: qmcgaw/gluetun:latest
+        cap_add:
+            - NET_ADMIN
+        env_file: .env
+        environment:
+            - VPN_SERVICE_PROVIDER=custom
+            - VPN_TYPE=openvpn
+            - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
+            - OPENVPN_USER=${KASPERSKY_USERNAME}
+            - OPENVPN_PASSWORD=${KASPERSKY_PASSWORD}
+            - TZ=America/Lima
+        volumes:
+            - ./credentials.ovpn:/gluetun/custom.conf:ro
+        ports:
+          - "9080:9080"          # UI qBittorrent
+          - "6881:6881"          # TCP BitTorrent
+          - "6881:6881/udp"      # UDP DHT
+          - "9117:9117"          # jackett ui
+          - "8191:8191"          # flaresolverr
+        restart: unless-stopped
+        networks:
+          mi-red:
+              external: true
