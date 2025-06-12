@@ -1,5 +1,5 @@
 qbittorrent - torrents
-gluetun - vpn
+gluetun - vpn - no funciona con  kaspersky
 watchstate - no
 sentryshot - no
 audiobookshelf - no
