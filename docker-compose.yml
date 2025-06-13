@@ -34,10 +34,6 @@ services:
             - PGID=${PGID}
             - TZ=America/Lima
             - WEBUI_PORT=9080
-        ports:
-            - "9080:9080"          # UI qBittorrent
-            - "6881:6881"          # TCP BitTorrent
-            - "6881:6881/udp"      # UDP DHT
         volumes:
             - /home/rigo/qbittorrent/config:/config
             - /media/RIGO8/Descargas:/downloads
