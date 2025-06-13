@@ -20,9 +20,7 @@ services:
             - "9117:9117"          # jackett ui
             - "8191:8191"          # flaresolverr
         restart: unless-stopped
-        networks:
-            mi-red:
-                external: true
+
     qbittorrent:
         image: lscr.io/linuxserver/qbittorrent:latest
         container_name: qbittorrent
@@ -44,6 +42,7 @@ services:
             - /home/rigo/qbittorrent/config:/config
             - /media/RIGO8/Descargas:/downloads
         restart: unless-stopped
+
     jackett:
         image: lscr.io/linuxserver/jackett:latest
         container_name: jackett
