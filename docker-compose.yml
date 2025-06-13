@@ -1,29 +1,29 @@
 services:
-#    gluetun:
-#        image: qmcgaw/gluetun:latest
-#        container_name: gluetun
-#        cap_add:
-#            - NET_ADMIN
-#        env_file: .env
-#        environment:
-#            - VPN_SERVICE_PROVIDER=custom
-#            - VPN_TYPE=openvpn
-#            - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
-#            - OPENVPN_USER=${KASPERSKY_USERNAME}
-#            - OPENVPN_PASSWORD=${KASPERSKY_PASSWORD}
-#            - TZ=America/Lima
-#        volumes:
-#            - ./credentials.ovpn:/gluetun/custom.conf:ro
-#        ports:
-#          - "9080:9080"          # UI qBittorrent
-#          - "6881:6881"          # TCP BitTorrent
-#          - "6881:6881/udp"      # UDP DHT
-#          - "9117:9117"          # jackett ui
-#          - "8191:8191"          # flaresolverr
-#        restart: unless-stopped
-#        networks:
-#          mi-red:
-#              external: true
+    #    gluetun:
+    #        image: qmcgaw/gluetun:latest
+    #        container_name: gluetun
+    #        cap_add:
+    #            - NET_ADMIN
+    #        env_file: .env
+    #        environment:
+    #            - VPN_SERVICE_PROVIDER=custom
+    #            - VPN_TYPE=openvpn
+    #            - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
+    #            - OPENVPN_USER=${KASPERSKY_USERNAME}
+    #            - OPENVPN_PASSWORD=${KASPERSKY_PASSWORD}
+    #            - TZ=America/Lima
+    #        volumes:
+    #            - ./credentials.ovpn:/gluetun/custom.conf:ro
+    #        ports:
+    #          - "9080:9080"          # UI qBittorrent
+    #          - "6881:6881"          # TCP BitTorrent
+    #          - "6881:6881/udp"      # UDP DHT
+    #          - "9117:9117"          # jackett ui
+    #          - "8191:8191"          # flaresolverr
+    #        restart: unless-stopped
+    #        networks:
+    #          mi-red:
+    #              external: true
     jellystat:
         image: cyfershepard/jellystat:latest
         container_name: jellystat
@@ -46,7 +46,30 @@ services:
             - "8081:80"
         restart: unless-stopped
         networks:
-           - mi-red
+            - mi-red
+    pihole:
+        container_name: pihole
+        image: pihole/pihole:latest
+        ports:
+            - "53:53/tcp"                                          # DNS TCP
+            - "53:53/udp"                                          # DNS UDP
+            - "80:80/tcp"                                          # HTTP
+            - "443:443/tcp"                                        # HTTPS
+            # - "67:67/udp"                                        # DHCP, opcional
+            # - "123:123/udp"                                      # NTP, opcional
+        environment:
+            TZ: 'America/Lima'
+            FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
+            FTLCONF_dns_listeningMode: 'all'                       # Modo de escucha DNS
+            # FTLCONF_misc_etc_dnsmasq_d: 'true'                   # Para persistir /etc/dnsmasq.d si migras de v5
+        volumes:
+            - '/home/rigo/etc-pihole:/etc/pihole'                           # Persistencia de datos de Pi-hole
+            # - './etc-dnsmasq.d:/etc/dnsmasq.d'                   # Persistencia de configuración adicional
+        #        cap_add:
+        # - NET_ADMIN   # Necesario solo si usas Pi-hole como DHCP server :contentReference[oaicite:12]{index=12}
+        # - SYS_TIME    # Necesario solo para que pueda ajustar la hora del host :contentReference[oaicite:13]{index=13}
+        # - SYS_NICE    # Opcional: para mayor prioridad de proceso
+        restart: unless-stopped
 networks:
     mi-red:
         external: true
