@@ -1,29 +1,65 @@
 services:
-    #    gluetun:
-    #        image: qmcgaw/gluetun:latest
-    #        container_name: gluetun
-    #        cap_add:
-    #            - NET_ADMIN
-    #        env_file: .env
-    #        environment:
-    #            - VPN_SERVICE_PROVIDER=custom
-    #            - VPN_TYPE=openvpn
-    #            - OPENVPN_CUSTOM_CONFIG=/gluetun/custom.conf
-    #            - OPENVPN_USER=${KASPERSKY_USERNAME}
-    #            - OPENVPN_PASSWORD=${KASPERSKY_PASSWORD}
-    #            - TZ=America/Lima
-    #        volumes:
-    #            - ./credentials.ovpn:/gluetun/custom.conf:ro
-    #        ports:
-    #          - "9080:9080"          # UI qBittorrent
-    #          - "6881:6881"          # TCP BitTorrent
-    #          - "6881:6881/udp"      # UDP DHT
-    #          - "9117:9117"          # jackett ui
-    #          - "8191:8191"          # flaresolverr
-    #        restart: unless-stopped
-    #        networks:
-    #          mi-red:
-    #              external: true
+    gluetun:
+        image: qmcgaw/gluetun:latest
+        container_name: gluetun
+        cap_add:
+            - NET_ADMIN
+        env_file: .env
+        environment:
+            - VPN_SERVICE_PROVIDER=nordvpn
+            - OPENVPN_USER=${NORD_USER}
+            - OPENVPN_PASSWORD=${NORD_PASS}
+            #            - SERVER_COUNTRIES=${NORD_COUNTRIES}
+            - TZ=America/Lima
+        volumes:
+            - /home/rigo/gluetun:/gluetun
+        ports:
+            - "9080:9080"          # UI qBittorrent
+            - "6881:6881"          # TCP BitTorrent
+            - "6881:6881/udp"      # UDP DHT
+            - "9117:9117"          # jackett ui
+            - "8191:8191"          # flaresolverr
+        restart: unless-stopped
+        networks:
+            mi-red:
+                external: true
+    qbittorrent:
+        image: lscr.io/linuxserver/qbittorrent:latest
+        container_name: qbittorrent
+        network_mode: "service:gluetun"   # usa la misma pila de red
+        depends_on:
+            gluetun:
+                condition: service_healthy
+        env_file: .env
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=America/Lima
+            - WEBUI_PORT=9080
+        ports:
+            - "9080:9080"          # UI qBittorrent
+            - "6881:6881"          # TCP BitTorrent
+            - "6881:6881/udp"      # UDP DHT
+        volumes:
+            - /home/rigo/qbittorrent/config:/config
+            - /media/RIGO8/Descargas:/downloads
+        restart: unless-stopped
+    jackett:
+        image: lscr.io/linuxserver/jackett:latest
+        container_name: jackett
+        network_mode: "service:gluetun"
+        depends_on:
+            gluetun:
+                condition: service_healthy
+        env_file: .env
+        environment:
+            - PUID=${PUID}
+            - PGID=${PGID}
+            - TZ=America/Lima
+        volumes:
+            - /home/rigo/jackett/config:/config
+        restart: unless-stopped
+
     jellystat:
         image: cyfershepard/jellystat:latest
         container_name: jellystat
@@ -39,6 +75,7 @@ services:
             - "3000:3000"
         networks:
             - mi-red
+
     it-tools:
         image: corentinth/it-tools:latest
         container_name: it-tools
@@ -47,6 +84,7 @@ services:
         restart: unless-stopped
         networks:
             - mi-red
+
     pihole:
         container_name: pihole
         image: pihole/pihole:latest
@@ -66,8 +104,8 @@ services:
             - '/home/rigo/etc-pihole:/etc/pihole'                           # Persistencia de datos de Pi-hole
             # - './etc-dnsmasq.d:/etc/dnsmasq.d'                   # Persistencia de configuración adicional
         #        cap_add:
-        # - NET_ADMIN   # Necesario solo si usas Pi-hole como DHCP server :contentReference[oaicite:12]{index=12}
-        # - SYS_TIME    # Necesario solo para que pueda ajustar la hora del host :contentReference[oaicite:13]{index=13}
+        # - NET_ADMIN   # Necesario solo si usas Pi-hole como DHCP server
+        # - SYS_TIME    # Necesario solo para que pueda ajustar la hora del host
         # - SYS_NICE    # Opcional: para mayor prioridad de proceso
         restart: unless-stopped
 networks:
