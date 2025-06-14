@@ -108,7 +108,7 @@ services:
         container_name: stirling-pdf
         image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
         ports:
-            - '8080:8080'
+            - '8082:8080'
         volumes:
             - /home/rigo/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
             - /home/rigo/StirlingPDF/extraConfigs:/configs
