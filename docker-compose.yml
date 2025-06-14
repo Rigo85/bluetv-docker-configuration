@@ -118,7 +118,9 @@ services:
         environment:
             - DISABLE_ADDITIONAL_FEATURES=false
             - LANGS="spa,eng"
-            - UI_LANGUAGES='["es_ES"]'
+            - UI_LANGUAGES='["es-ES"]'
+            - SYSTEM_DEFAULTLOCALE=es-ES
+
 networks:
     mi-red:
         external: true
