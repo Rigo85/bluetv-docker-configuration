@@ -121,6 +121,7 @@ services:
             LANGS: "spa,eng"
             UI_LANGUAGES: '["es_ES"]'
             SYSTEM_DEFAULTLOCALE: es-ES
+            APP_LOCALE: es-ES
         restart: unless-stopped
         networks:
             - mi-red
