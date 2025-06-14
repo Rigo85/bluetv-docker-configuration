@@ -120,6 +120,9 @@ services:
             - LANGS="spa,eng"
             - UI_LANGUAGES='["es-ES"]'
             - SYSTEM_DEFAULTLOCALE=es-ES
+        restart: unless-stopped
+        networks:
+            - mi-red
 
 networks:
     mi-red:
