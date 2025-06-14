@@ -103,6 +103,21 @@ services:
         # - SYS_TIME    # Necesario solo para que pueda ajustar la hora del host
         # - SYS_NICE    # Opcional: para mayor prioridad de proceso
         restart: unless-stopped
+
+    stirling-pdf:
+        image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+        ports:
+            - '8080:8080'
+        volumes:
+            - /home/rigo/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
+            - /home/rigo/StirlingPDF/extraConfigs:/configs
+            - /home/rigo/StirlingPDF/customFiles:/customFiles/
+            - /home/rigo/StirlingPDF/logs:/logs/
+            - /home/rigo/StirlingPDF/pipeline:/pipeline/
+        environment:
+            - DISABLE_ADDITIONAL_FEATURES=false
+            - LANGS="spa,eng"
+            - UI_LANGUAGES='["es_ES]'
 networks:
     mi-red:
         external: true
