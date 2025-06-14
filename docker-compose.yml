@@ -93,7 +93,7 @@ services:
         environment:
             TZ: 'America/Lima'
             FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
-#            FTLCONF_webserver_port: ${PIHOLE_WEB_PORT}        # Puerto del webserver de Pi-hole
+            #            FTLCONF_webserver_port: ${PIHOLE_WEB_PORT}        # Puerto del webserver de Pi-hole
             FTLCONF_dns_listeningMode: 'all'                       # Modo de escucha DNS
             # FTLCONF_misc_etc_dnsmasq_d: 'true'                   # Para persistir /etc/dnsmasq.d si migras de v5
         volumes:
@@ -103,6 +103,21 @@ services:
         # - NET_ADMIN   # Necesario solo si usas Pi-hole como DHCP server
         # - SYS_TIME    # Necesario solo para que pueda ajustar la hora del host
         # - SYS_NICE    # Opcional: para mayor prioridad de proceso
+        restart: unless-stopped
+
+    flaresolverr:
+        # DockerHub mirror flaresolverr/flaresolverr:latest
+        image: ghcr.io/flaresolverr/flaresolverr:latest
+        container_name: flaresolverr
+        network_mode: "service:gluetun"
+        depends_on:
+            gluetun:
+                condition: service_healthy
+        environment:
+            LOG_LEVEL: "info"
+#            LOG_HTML: ${LOG_HTML:-false}
+#            CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
+            TZ: 'America/Lima'
         restart: unless-stopped
 
     stirling-pdf:
