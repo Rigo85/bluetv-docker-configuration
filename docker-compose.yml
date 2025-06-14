@@ -117,10 +117,10 @@ services:
             - /home/rigo/StirlingPDF/logs:/logs/
             - /home/rigo/StirlingPDF/pipeline:/pipeline/
         environment:
-            - DISABLE_ADDITIONAL_FEATURES=false
-            - LANGS=es_ES
-            - UI_LANGUAGES='["es_ES"]'
-            - SYSTEM_DEFAULTLOCALE=es-ES
+            DISABLE_ADDITIONAL_FEATURES: false
+            LANGS: "spa,eng"
+            UI_LANGUAGES: '["es_ES"]'
+            SYSTEM_DEFAULTLOCALE: es-ES
         restart: unless-stopped
         networks:
             - mi-red
