@@ -93,6 +93,7 @@ services:
         environment:
             TZ: 'America/Lima'
             FTLCONF_webserver_api_password: ${PIHOLE_API_PASSWORD}
+            FTLCONF_webserver_port: ${PIHOLE_WEB_PORT}        # Puerto del webserver de Pi-hole
             FTLCONF_dns_listeningMode: 'all'                       # Modo de escucha DNS
             # FTLCONF_misc_etc_dnsmasq_d: 'true'                   # Para persistir /etc/dnsmasq.d si migras de v5
         volumes:
@@ -117,8 +118,8 @@ services:
             - /home/rigo/StirlingPDF/pipeline:/pipeline/
         environment:
             - DISABLE_ADDITIONAL_FEATURES=false
-            - LANGS="spa,eng"
-            - UI_LANGUAGES='["es-ES"]'
+            - LANGS=es_ES
+            - UI_LANGUAGES='["es_ES"]'
             - SYSTEM_DEFAULTLOCALE=es-ES
         restart: unless-stopped
         networks:
