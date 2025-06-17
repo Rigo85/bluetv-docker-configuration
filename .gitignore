@@ -1,3 +1,4 @@
 credentials.ovpn
 .env
 .idea
+pihole-tests
