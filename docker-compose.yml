@@ -34,6 +34,8 @@ services:
             - PGID=${PGID}
             - TZ=America/Lima
             - WEBUI_PORT=9080
+            - QBT_WEBUI_USERNAME=${QBT_WEBUI_USERNAME}
+            - QBT_WEBUI_PASSWORD=${QBT_WEBUI_PASSWORD}
         volumes:
             - /home/rigo/qbittorrent/config:/config
             - /media/RIGO8/Descargas:/downloads
