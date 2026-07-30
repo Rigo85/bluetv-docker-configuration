@@ -72,6 +72,7 @@ services:
             - "3000:3000"
         networks:
             - mi-red
+        restart: unless-stopped
 
     it-tools:
         image: corentinth/it-tools:latest
